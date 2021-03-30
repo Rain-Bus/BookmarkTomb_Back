@@ -11,7 +11,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author This is the implementation of UserDetail;
+ * @author fallen-angle
+ * This is the implementation of UserDetail;
  */
 @Data
 @RequiredArgsConstructor

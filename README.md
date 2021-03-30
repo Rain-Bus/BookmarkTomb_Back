@@ -1,4 +1,4 @@
-<div style="font-size: 40px; font-weight: bold;text-align: center;">Bookmark Tomb</div>
+# Bookmark Tomb
 
 > This is a bookmark sync system. Now, you locate at backend project.
 

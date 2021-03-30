@@ -10,9 +10,7 @@ import java.io.IOException;
 
 
 /**
- * When user access RestAPI without any certificate, this will send an 401 error code;
  * @author fallen-angle
- * @date 2020-08-18 11:42
  */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

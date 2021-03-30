@@ -23,6 +23,7 @@ function archiveFile() {
   fi
 }
 
+# Detect project is running or not.
 PID_ARR=$(ps -aux | grep -E "java -jar bookmark_tomb.*.jar" | grep -v grep | awk '{print $2}' | xargs echo -n)
 if [ ${#PID_ARR[@]} -ne 0 ] && [ "$PID_ARR" != "" ]; then
   echo -e "\e[33mSystem has been running, please run stop.sh or restart.sh\e[0m"
@@ -40,6 +41,7 @@ LOG_PATH="$SYSTEM_HOME/bookmark_tomb.log"
 INSTALL_PATH=$(dirname "$0")
 cd "$INSTALL_PATH" || exit
 
+# Detect conf file and log file exist or not.
 if [ ! -d "$SYSTEM_HOME" ]; then
   echo "Created conf directory: $SYSTEM_HOME"
   mkdir "$SYSTEM_HOME"
@@ -53,6 +55,7 @@ if [ ! -e "$LOG_PATH" ]; then
   touch "$LOG_PATH"
 fi
 
+# Archive the old jar package.
 CURRENT_JAR=0
 for JAR_FILE in bookmark_tomb*.jar; do
   if [ -e "$JAR_FILE" ]; then
@@ -80,6 +83,7 @@ elif [ ${#JAR_ARR[@]} -gt 1 ]; then
   done
 fi
 
+# Get the server port and start.
 if [ -e "$CONF_PATH" ]; then
   SERVER_PORT="$(grep serverPort "$CONF_PATH" | grep -Eo "[0-9]+")"
   if [ -n "$SERVER_PORT" ] && ((SERVER_PORT > 0 && SERVER_PORT <= 65535)); then

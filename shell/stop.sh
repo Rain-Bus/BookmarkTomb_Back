@@ -2,6 +2,7 @@
 
 echo "Stopping Bookmark Tomb..."
 
+# Get the process pid and kill it.
 PID_ARR=$(ps -aux | grep -E "java -jar bookmark_tomb.*.jar" | grep -v grep | awk '{print $2}' | xargs echo -n)
 if [ ${#PID_ARR[@]} -ne 0 ] && [ "$PID_ARR" != "" ]; then
   for PID in $PID_ARR; do
@@ -12,6 +13,7 @@ if [ ${#PID_ARR[@]} -ne 0 ] && [ "$PID_ARR" != "" ]; then
     echo -e "\e[33mNo progress ran on this machine! Please run start.sh to start.\e[0m"
 fi
 
+# Record the stop time, if more than 30s, force kill process.
 STOP_TIME=1
 while [ $STOP_TIME -lt 30 ]; do
   PID_ARR=$(ps -aux | grep -E "java -jar bookmark_tomb.*.jar" | grep -v grep | awk '{print $2}' | xargs echo -n)

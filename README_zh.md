@@ -1,7 +1,8 @@
-<div style="font-size: 40px; font-weight: bold;text-align: center;">Bookmark Tomb</div>
-<div style="color: grey; font-size: 30px; font-weight: normal;text-align: center;">签坟</div>
+# Bookmark Tomb
 
-> 本项目是一个书签同步系统，你现在访问的时我们的后端仓库。
+####签坟
+
+> 本项目是一个书签同步系统，您现在访问的时我们的后端仓库。
 
 你可以前往我们的[主页](https://bookmarktomb.github.io/BookmarkTomb_Docs)查看帮助文档(暂时还不够完善)。
 

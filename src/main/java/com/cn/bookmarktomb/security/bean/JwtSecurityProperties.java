@@ -6,6 +6,7 @@ import lombok.Setter;
 
 /**
  * @author fallen-angle
+ * This is used to get the security property in spring configuratiuon.
  */
 @Getter
 @Setter

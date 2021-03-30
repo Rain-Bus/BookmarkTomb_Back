@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * When user access the RestAPI without any empowerment, this will response 403 error code;
  * @author fallen-angle
- * @date 2020-08-18 12:01
  */
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {

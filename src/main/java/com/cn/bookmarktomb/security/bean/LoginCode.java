@@ -3,8 +3,8 @@ package com.cn.bookmarktomb.security.bean;
 import lombok.Data;
 
 /**
- * This is storage the login code in configuration;
  * @author fallen-angle
+ * This is the configuration of image code.
  */
 @Data
 public class LoginCode {

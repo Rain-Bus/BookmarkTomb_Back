@@ -19,7 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * @author This is the authentication class;
+ * @author fallen-angle
+ * This is the authentication class;
  */
 @RequiredArgsConstructor
 @Service("userDetailService")

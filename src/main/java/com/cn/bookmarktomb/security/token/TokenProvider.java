@@ -28,8 +28,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This is used to generate and parse token;
  * @author fallen-angle
+ * This is used to generate and parse token;
  */
 @Slf4j
 @Component
@@ -54,10 +54,6 @@ public class TokenProvider implements InitializingBean {
 				.signWith(key, SignatureAlgorithm.HS512);
 	}
 
-	/**
-	 * The token doesn't need to set expire;
-	 * @return The token has been generated;
-	 */
 	public String generateToken(UserBasicInfoVO userBasicInfoVO) {
 
 		Map<String, Object> userInfo = new HashMap<>(2);
@@ -73,8 +69,6 @@ public class TokenProvider implements InitializingBean {
 
 	/**
 	 * Analyze and parse the token;
-	 * @param token The token need to parse;
-	 * @return The claim has been parsed;
 	 */
 	public Claims getClaims(String token) {
 		return jwtParser.parseClaimsJws(token).getBody();
@@ -95,7 +89,6 @@ public class TokenProvider implements InitializingBean {
 
 	/**
 	 * Check the token need renew or not;
-	 * @param token The token need to detect;
 	 */
 	public void checkRenewal(String token) {
 		// Get the expire time of token.
@@ -108,8 +101,6 @@ public class TokenProvider implements InitializingBean {
 
 	/**
 	 * Get token from request;
-	 * @param request The token extract from;
-	 * @return The token has been got;
 	 */
 	public String getToken(HttpServletRequest request) {
 		final String requestHeader = request.getHeader(properties.getHeader());

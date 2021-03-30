@@ -12,8 +12,8 @@ import java.awt.*;
 import java.util.Objects;
 
 /**
- * This is used to get the properties in spring configuration;
  * @author fallen-angle
+ * This is used to get the login properties in spring configuration;
  */
 @Data
 public class JwtLoginProperties {

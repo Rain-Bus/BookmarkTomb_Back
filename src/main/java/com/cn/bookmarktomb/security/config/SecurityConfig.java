@@ -18,7 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * @author This is the configration of spring security;
+ * @author fallen-angle
+ * This is the configration of spring security;
  */
 @Configuration
 @EnableWebSecurity

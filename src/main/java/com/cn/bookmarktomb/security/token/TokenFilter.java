@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.cn.bookmarktomb.excepotion.BadRequestException;
 import com.cn.bookmarktomb.model.cache.ConfigCache;
 import com.cn.bookmarktomb.model.constant.ErrorCodeConstant;
-import com.cn.bookmarktomb.model.enums.RequestMethodEnum;
 import com.cn.bookmarktomb.model.factory.ApiErrorFactory;
 import com.cn.bookmarktomb.model.vo.ApiErrorVO;
 import com.cn.bookmarktomb.service.OnlineService;
@@ -19,6 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -32,7 +32,8 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
- * @author homeubuntu
+ * @author fallen-angle
+ * This is the filter of every request.
  */
 @Slf4j
 @Component
@@ -160,8 +161,8 @@ public class TokenFilter extends OncePerRequestFilter {
 	}
 
 	static boolean isApiPublic(HttpServletRequest request) {
-		final String get = String.valueOf(RequestMethodEnum.GET);
-		final String post = String.valueOf(RequestMethodEnum.POST);
+		final String get = String.valueOf(RequestMethod.GET);
+		final String post = String.valueOf(RequestMethod.POST);
 		Map<String, String> publicMap = MapBuilder.<String, String>create()
 				.put("^/api/public/system$", get)
 				.put("^/api/public/init$", post)

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.fivesmall</groupId>
     <artifactId>bookmark_tomb</artifactId>
-    <version>0.0.24-Mongo</version>
+    <version>0.1</version>
     <name>bookmark_tomb</name>
     <description>The collection of bookmarks, with team, and community;</description>
 
