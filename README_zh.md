@@ -23,7 +23,7 @@
 
 1. 克隆本项目
    
-    `git clone https://mygitea.fallen-angle.com/fallen-angle/bookmark_tomb_back`
+    `git clone https://github.com/BookmarkTomb/BookmarkTomb_Back.git`
    
 2. 将本项目带入IDEA或其他编辑器。
 3. 设置Java开发环境的版本为11或者更新。

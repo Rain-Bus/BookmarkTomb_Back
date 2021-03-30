@@ -21,7 +21,7 @@ The details as fallow table:
 
 1. Clone the project
    
-    `git clone https://mygitea.fallen-angle.com/fallen-angle/bookmark_tomb_back`
+    `git clone https://github.com/BookmarkTomb/BookmarkTomb_Back.git`
    
 2. Import to IDEA or other IDE
 3. Set develop java version to 11 or higher.
