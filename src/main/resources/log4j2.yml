@@ -1,0 +1,26 @@
+Configuration:
+  status: warn
+  name: BookComboLog
+#  properties:
+#    property:
+#      - name: fileName
+#        value: bc.log
+#      - name: filePath
+#        value: target/log
+#      - name: fileLogLevel
+#        value: warn
+#      - name: console
+#        value: info
+#      - name: logPattern
+#        value: "%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-30.30C{1.} : %m%n"
+  appenders:
+    Console:
+      name: CONSOLE
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "[%d][%t][%p][%l] %m%n"
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: CONSOLE

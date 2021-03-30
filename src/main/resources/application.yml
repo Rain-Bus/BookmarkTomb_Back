@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: spring-boot-mongodb
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+logging:
+  config: classpath:log4j2.yml
+jwt:
+  header: Authorization
+  token-prefix: Bearer
+  base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+  token-expire-seconds: 14400000
+  online-key: online-token-
+  code-key: code-key-
+  renew-trigger-time: 1800
+  renew-duration: 3600
+login:
+  cache-enable: true
+  login-code:
+    code-type: ARITHMETIC
+    code-expiration: 180
+    code-image-width: 111
+    code-image-height: 36
+    code-length: 2
+    code-font-name:
+    code-font-size: 25
+
+project:
+  name: '@project.name@'
+  version: '@project.version@'

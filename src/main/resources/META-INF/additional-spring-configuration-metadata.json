@@ -1,0 +1,43 @@
+{
+  "properties": [
+    {
+      "name": "spring.data.jedis.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.password."
+    },
+    {
+      "name": "spring.data.jedis.host",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.host."
+    },
+    {
+      "name": "spring.data.jedis.port",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.port."
+    },
+    {
+      "name": "spring.data.jedis.timeout",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.timeout."
+    },
+    {
+      "name": "spring.data.jedis.pool.max-idle",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.pool.max-idle."
+    },
+    {
+      "name": "spring.data.jedis.pool.max-wait",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.pool.max-wait."
+    },
+    {
+      "name": "spring.data.jedis.pool.max-total",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.pool.max-total."
+    },
+    {
+      "name": "spring.data.jedis.pool.block-when-exhausted",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.jedis.pool.block-when-exhausted."
+    }
+  ] }
