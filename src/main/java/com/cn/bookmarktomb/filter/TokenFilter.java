@@ -1,4 +1,4 @@
-package com.cn.bookmarktomb.security.token;
+package com.cn.bookmarktomb.filter;
 
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.util.StrUtil;
@@ -7,8 +7,9 @@ import com.cn.bookmarktomb.model.cache.ConfigCache;
 import com.cn.bookmarktomb.model.constant.ErrorCodeConstant;
 import com.cn.bookmarktomb.model.factory.ApiErrorFactory;
 import com.cn.bookmarktomb.model.vo.ApiErrorVO;
+import com.cn.bookmarktomb.security.token.TokenProvider;
 import com.cn.bookmarktomb.service.OnlineService;
-import com.cn.bookmarktomb.util.JsonUtil;
+import com.cn.bookmarktomb.util.FilterUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.*;
 
-/**
+/**p
  * @author fallen-angle
  * This is the filter of every request.
  */
@@ -48,44 +47,11 @@ public class TokenFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		boolean initFlag = (boolean) ConfigCache.get(ConfigCache.INIT_FLAG);
-		if (!initFlag && !isApiInit(request)) {
-			ResponseEntity<ApiErrorVO> responseEntity = ApiErrorFactory.serverError("System not init!");
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.setContentType("application/json");
-			OutputStreamWriter osw = new OutputStreamWriter(response.getOutputStream());
-			PrintWriter printWriter = new PrintWriter(osw, true);
-			ApiErrorVO apiErrorVO = responseEntity.getBody();
-			printWriter.print(JsonUtil.mapToJson(apiErrorVO));
-			printWriter.close();
-			osw.close();
-			filterChain.doFilter(request, response);
-			return;
-		} else if (!initFlag && isApiInit(request)) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-		boolean adminFlag = (boolean) ConfigCache.get(ConfigCache.ADMIN_FLAG);
-		if (!adminFlag && !isAPiInitAdmin(request)) {
-			ResponseEntity<ApiErrorVO> responseEntity = ApiErrorFactory.serverError("Admin account hasn't been set!");
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.setContentType("application/json");
-			OutputStreamWriter osw = new OutputStreamWriter(response.getOutputStream());
-			PrintWriter printWriter = new PrintWriter(osw, true);
-			ApiErrorVO apiErrorVO = responseEntity.getBody();
-			printWriter.print(JsonUtil.mapToJson(apiErrorVO));
-			printWriter.close();
-			osw.close();
-			filterChain.doFilter(request, response);
-			return;
-		} else if (!adminFlag && isAPiInitAdmin(request)) {
-			filterChain.doFilter(request, response);
-			return;
-		}
 		String authToken = tokenProvider.getToken(request);
 		boolean rememberMe = getRememberMe(request);
+		boolean staredOk = (boolean) ConfigCache.get(ConfigCache.STARTED_OK);
 		// If don't request have token, the request will pass directly.
-		if (!isApiPublic(request) && StrUtil.isNotBlank(authToken)) {
+		if (staredOk && !isApiPublic(request) && StrUtil.isNotBlank(authToken)) {
 			try {
 				onlineService.selectInfo(authToken, rememberMe);
 				if (rememberMe) {
@@ -100,14 +66,7 @@ public class TokenFilter extends OncePerRequestFilter {
 					which will prevent the change of response, the implementation can refer to ResponseFacade.setStatus(int sc).
 					The implementation detail can be found by debug.
 				 */
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				response.setContentType("application/json");
-				OutputStreamWriter osw = new OutputStreamWriter(response.getOutputStream());
-				PrintWriter printWriter = new PrintWriter(osw, true);
-				ApiErrorVO apiErrorVO = responseEntity.getBody();
-				printWriter.print(JsonUtil.mapToJson(apiErrorVO));
-				printWriter.close();
-				osw.close();
+				FilterUtil.generateJsonResponse(response, HttpServletResponse.SC_FORBIDDEN, responseEntity.getBody());
 				filterChain.doFilter(request, response);
 				return;
 			}
@@ -122,36 +81,44 @@ public class TokenFilter extends OncePerRequestFilter {
 			SecurityContextHolder.clearContext();
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userName, null, authorities));
 
-			// Read the user id and write into request param, the controller can read this by param instead of get from request.
-			String userId = claims.getSubject();
-			HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request) {
-				@Override
-				public Enumeration<String> getParameterNames() {
-					Set<String> paramNames = new LinkedHashSet<>();
-					paramNames.add(USER_ID_KEY);
-					paramNames.add(USER_TOKEN);
-					Enumeration<String> names =  super.getParameterNames();
-					while(names.hasMoreElements()) {
-						paramNames.add(names.nextElement());
-					}
-					return Collections.enumeration(paramNames);
-				}
-
-				@Override
-				public String[] getParameterValues(String name) {
-					if (USER_ID_KEY.equals(name)) {
-						return new String[]{userId};
-					}
-					else if (USER_TOKEN.equals(name)) {
-						return new String[]{authToken};
-					}
-					return super.getParameterValues(name);
-				}
-			};
+			HttpServletRequestWrapper requestWrapper = generateWrapper(request, authToken);
 			filterChain.doFilter(requestWrapper, response);
 		} else {
 			filterChain.doFilter(request, response);
 		}
+	}
+
+	private HttpServletRequestWrapper generateWrapper(HttpServletRequest request, String authToken) {
+
+		Claims claims = tokenProvider.getClaims(authToken);
+
+		// Read the user id and write into request param, the controller can read this by param instead of get from request.
+		String userId = claims.getSubject();
+
+		return new HttpServletRequestWrapper(request) {
+			@Override
+			public Enumeration<String> getParameterNames() {
+				Set<String> paramNames = new LinkedHashSet<>();
+				paramNames.add(USER_ID_KEY);
+				paramNames.add(USER_TOKEN);
+				Enumeration<String> names =  super.getParameterNames();
+				while(names.hasMoreElements()) {
+					paramNames.add(names.nextElement());
+				}
+				return Collections.enumeration(paramNames);
+			}
+
+			@Override
+			public String[] getParameterValues(String name) {
+				if (USER_ID_KEY.equals(name)) {
+					return new String[]{userId};
+				}
+				else if (USER_TOKEN.equals(name)) {
+					return new String[]{authToken};
+				}
+				return super.getParameterValues(name);
+			}
+		};
 	}
 
 	private boolean getRememberMe(HttpServletRequest request) {
@@ -166,32 +133,14 @@ public class TokenFilter extends OncePerRequestFilter {
 		Map<String, String> publicMap = MapBuilder.<String, String>create()
 				.put("^/api/public/system$", get)
 				.put("^/api/public/init$", post)
+				.put("^/api/public/admin$", post)
+				.put("^/api/public/db$", get)
 				.put("^/api/code/.*$", get)
 				.put("^/api/doc.html", get)
 				.put("^/api/user/.*$", post)
 				.map();
 		for (Map.Entry<String, String> entry: publicMap.entrySet()) {
 			if (request.getRequestURI().matches(entry.getKey()) && entry.getValue().equals(request.getMethod())){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isApiInit(HttpServletRequest request) {
-		List<String> initApi = List.of("^/webjar.*$", "^/api/public/init$", "^/doc.html.*$", "^/swagger-resources$", "^/v3/api-docs$");
-		for (String url: initApi) {
-			if (request.getRequestURI().matches(url)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isAPiInitAdmin(HttpServletRequest request) {
-		List<String> initApi = List.of("^/webjar.*$", "^/api/public/admin$", "^/doc.html.*$", "^/swagger-resources$", "^/v3/api-docs$");
-		for (String url: initApi) {
-			if (request.getRequestURI().matches(url)) {
 				return true;
 			}
 		}

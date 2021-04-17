@@ -1,30 +1,39 @@
 package com.cn.bookmarktomb.controller;
 
 import cn.hutool.core.map.MapBuilder;
+import com.cn.bookmarktomb.config.AdminConfig;
 import com.cn.bookmarktomb.model.bean.ProjectProperties;
 import com.cn.bookmarktomb.model.cache.ConfigCache;
 import com.cn.bookmarktomb.model.convert.SystemInfoConvert;
 import com.cn.bookmarktomb.model.convert.UserInfoConverter;
-import com.cn.bookmarktomb.model.dto.UserInfoDTO.*;
+import com.cn.bookmarktomb.model.dto.UserInfoDTO.RegisterDTO;
+import com.cn.bookmarktomb.model.dto.UserInfoDTO.UserBasicInfoDTO;
 import com.cn.bookmarktomb.model.vo.AdminVO.AdminCreateUserVO;
-import com.cn.bookmarktomb.model.vo.SystemInfoVO.*;
+import com.cn.bookmarktomb.model.vo.SystemInfoVO.EmailVO;
+import com.cn.bookmarktomb.model.vo.SystemInfoVO.InitVO;
 import com.cn.bookmarktomb.service.UserInfoService;
 import com.cn.bookmarktomb.util.MailUtil;
 import com.cn.bookmarktomb.util.MongoUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
 
+/**
+ * @author fallen-angle
+ * This is the controllers of public info;
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/public")
 public class PublicInfoController {
 
 	private final MailUtil mailUtil;
+	private final AdminConfig adminConfig;
 	private final UserInfoService userInfoService;
 	private final ProjectProperties projectProperties;
 	private final SystemInfoConvert systemInfoConvert;
@@ -79,6 +88,34 @@ public class PublicInfoController {
 	public ResponseEntity<Object> testEmail(@Valid @RequestBody EmailVO emailVO) {
 		mailUtil.sendTestEmail(systemInfoConvert.emailVO2DO(emailVO));
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/enable")
+	@ApiOperation("Get the status of register and email")
+	public ResponseEntity<Object> getEnable() {
+		Map<String, Boolean> enableMap = MapBuilder.<String, Boolean>create()
+				.put(ConfigCache.ADMIN_FLAG, (Boolean) ConfigCache.get(ConfigCache.EMAIL_ENABLE))
+				.put(ConfigCache.REGISTER_ENABLE, (Boolean) ConfigCache.get(ConfigCache.REGISTER_ENABLE))
+				.map();
+		return ResponseEntity.ok(enableMap);
+	}
+
+	@GetMapping("/db")
+	@ApiOperation("Reconnect database")
+	public ResponseEntity<Object> resetDb() {
+		boolean authFlag = (boolean) ConfigCache.get(ConfigCache.DATABASE_AUTH);
+		boolean reachFlag = (boolean) ConfigCache.get(ConfigCache.DATABASE_REACH);
+
+		if (reachFlag && authFlag) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have been connected to db!");
+		} else {
+			try {
+				adminConfig.execDetectAdmin();
+				return ResponseEntity.ok("Connected");
+			} catch (Exception ignored) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failure");
+			}
+		}
 	}
 
 	@GetMapping("/test")

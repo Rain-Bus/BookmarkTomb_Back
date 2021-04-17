@@ -161,7 +161,6 @@ public class UserInfoVO {
 		private String email;
 
 		@NotNull
-		@Email
 		private String code;
 
 		@NotNull(message = "This Filed can't be null!")

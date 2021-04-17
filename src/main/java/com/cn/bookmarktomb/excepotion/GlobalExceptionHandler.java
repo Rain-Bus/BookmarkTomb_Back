@@ -1,13 +1,17 @@
 package com.cn.bookmarktomb.excepotion;
 
+import com.cn.bookmarktomb.model.entity.Email;
 import com.cn.bookmarktomb.util.ThrowableUtil;
 import com.cn.bookmarktomb.model.constant.ErrorCodeConstant;
 import com.cn.bookmarktomb.model.factory.ApiErrorFactory;
 import com.cn.bookmarktomb.model.vo.ApiErrorVO;
 import com.cn.bookmarktomb.util.ThrowableUtil;
+import com.sun.mail.util.MailConnectException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -41,6 +45,18 @@ public class GlobalExceptionHandler {
 		return ApiErrorFactory.requestError(HttpStatus.FORBIDDEN, ErrorCodeConstant.USER_CREDENTIAL_ERROR_CODE, ErrorCodeConstant.USER_CREDENTIAL_ERROR_MSG);
 	}
 
+	@ExceptionHandler(MailSendException.class)
+	public ResponseEntity<ApiErrorVO> mailHostConnectException(MailSendException e) {
+		log.error(ThrowableUtil.getStackTrace(e));
+		return ApiErrorFactory.serverError(ErrorCodeConstant.EMAIL_UNREACHABLE_CODE, ErrorCodeConstant.EMAIL_UNREACHABLE_MSG);
+	}
+
+	@ExceptionHandler(MailAuthenticationException.class)
+	public ResponseEntity<ApiErrorVO> mailAuthException(MailAuthenticationException e) {
+		log.error(ThrowableUtil.getStackTrace(e));
+		return ApiErrorFactory.serverError(5007, "Email auth error");
+	}
+
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<ApiErrorVO> badRequestException(BadRequestException e) {
 		log.error(ThrowableUtil.getStackTrace(e));
@@ -72,7 +88,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(UniqueIdUsedException.class)
 	public ResponseEntity<ApiErrorVO> uniqueIdUsedException(UniqueIdUsedException e) {
 		log.error(ThrowableUtil.getStackTrace(e));
-		return ApiErrorFactory.requestError(e.getCode(), e.getMessage());
+		return ApiErrorFactory.requestError(ErrorCodeConstant.EMAIL_NOT_AUTH_CODE, ErrorCodeConstant.EMAIL_NOT_AUTH_MSG);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)

@@ -21,15 +21,19 @@ import java.util.Map;
  */
 public class ConfigCache {
 
-	public static final String EMAIL = "email";
-	public static final String DATABASE = "database";
 	public static final String MD_5 = "md5";
-	public static final String CONF_PATH = "conf";
+	public static final String EMAIL = "email";
 	public static final String JAR_PATH = "jar";
+	public static final String CONF_PATH = "conf";
 	public static final String INIT_FLAG = "init";
 	public static final String ADMIN_FLAG = "admin";
+	public static final String DATABASE = "database";
+	public static final String STARTED_OK = "startedOk";
 	public static final String SERVER_PORT = "serverPort";
 	public static final String EMAIL_ENABLE = "emailEnable";
+	public static final String STARTED_FLAG = "startedFlag";
+	public static final String DATABASE_AUTH = "databaseAuh";
+	public static final String DATABASE_REACH = "databaseReach";
 	public static final String REGISTER_ENABLE = "registerEnable";
 
 	static Map<String, Object> configMap = MapBuilder.<String, Object>create()
@@ -38,9 +42,13 @@ public class ConfigCache {
 			.put(DATABASE, null)
 			.put(JAR_PATH, null)
 			.put(INIT_FLAG, false)
+			.put(STARTED_OK, false)
 			.put(ADMIN_FLAG, false)
 			.put(SERVER_PORT, null)
 			.put(EMAIL_ENABLE, null)
+			.put(DATABASE_AUTH, true)
+			.put(STARTED_FLAG, false)
+			.put(DATABASE_REACH, true)
 			.put(REGISTER_ENABLE, null)
 			.put(CONF_PATH, SystemUtil.getUserInfo().getHomeDir() + "/.bookmark_tomb/conf.json")
 			.map();

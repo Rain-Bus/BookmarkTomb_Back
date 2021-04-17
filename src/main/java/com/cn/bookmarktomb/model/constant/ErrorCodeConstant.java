@@ -1,5 +1,7 @@
 package com.cn.bookmarktomb.model.constant;
 
+import com.cn.bookmarktomb.controller.PublicInfoController;
+
 /**
  * @author fallen-anlgle
  * This is the error code constant.
@@ -69,6 +71,27 @@ public class ErrorCodeConstant {
     public static final String SYSTEM_ERROR_DATA = "System appeared errors, please contact with administrator or try again later!";
 
     public static final int CONFIGURATION_ERROR_CODE = 5000;
+
+    public static final int SYSTEM_NOT_INIT_CODE = 5001;
+    public static final String SYSTEM_NOT_INIT_MSG = "System hasn't been initialized";
+
+    public static final int ADMIN_NOT_SET_CODE = 5002;
+    public static final String ADMIN_NOT_SET_MSG = "Admin account hasn't been created";
+
+    public static final int DATABASE_UNREACHABLE_CODE = 5003;
+    public static final String DATABASE_UNREACHABLE_MSG = "Database reach error";
+
+    public static final int DATABASE_NOT_AUTH_CODE = 5004;
+    public static final String DATABASE_NOT_AUTH_MSG = "Database auth error";
+
+    public static final int SYSTEM_STARING_CODE = 5005;
+    public static final String SYSTEM_STARING_MSG = "System is starting";
+
+    public static final int EMAIL_UNREACHABLE_CODE = 5006;
+    public static final String EMAIL_UNREACHABLE_MSG = "Email host unreachable";
+
+    public static final int EMAIL_NOT_AUTH_CODE = 5007;
+    public static final String EMAIL_NOT_AUTH_MSG = "Email server auth error";
 
     public static final int DB_OPERATION_CODE = 5100;
     public static final String DB_OPERATION_ERROR = "Database operation error";

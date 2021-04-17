@@ -10,8 +10,16 @@ import org.springframework.http.ResponseEntity;
  */
 public class ApiErrorFactory {
 
+	public static ResponseEntity<ApiErrorVO> serverError(HttpStatus status, Integer code, Object message) {
+		return new ResponseEntity<>(new ApiErrorVO(code, message), status);
+	}
+
+	public static ResponseEntity<ApiErrorVO> serverError(Integer code, Object message) {
+		return new ResponseEntity<>(new ApiErrorVO(code, message), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	public static ResponseEntity<ApiErrorVO> serverError(HttpStatus status, Object message) {
-		return new ResponseEntity<>(new ApiErrorVO(status.value(), message), status);
+		return serverError(status, status.value(), message);
 	}
 
 	public static ResponseEntity<ApiErrorVO> serverError(Object message) {

@@ -1,8 +1,8 @@
 package com.cn.bookmarktomb.security.config;
 
+import com.cn.bookmarktomb.filter.TokenFilter;
 import com.cn.bookmarktomb.security.token.JwtAccessDeniedHandler;
 import com.cn.bookmarktomb.security.token.JwtAuthenticationEntryPoint;
-import com.cn.bookmarktomb.security.token.TokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,6 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CorsFilter corsFilter;
-	private final TokenFilter tokenFilter;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -36,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 				.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
 				// Handle the errors of auth.
 				.exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
