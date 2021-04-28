@@ -44,7 +44,7 @@ public class DatabaseFilter extends OncePerRequestFilter {
  	}
 
 	private boolean isApiInit(HttpServletRequest request) {
-		List<String> initApi = List.of("^/webjar.*$", "^/api/public/db$", "^/api/public/init$", "^/doc.html.*$", "^/swagger-resources$", "^/v3/api-docs$");
+		List<String> initApi = List.of("^/$","^/(css|js|font|favicon|logo).*$", "^/#/.*$", "^/webjar.*$", "^/api/public/db$", "^/api/public/init$", "^/doc.html.*$", "^/swagger-resources$", "^/v3/api-docs$");
 		for (String url: initApi) {
 			if (request.getRequestURI().matches(url)) {
 				return true;

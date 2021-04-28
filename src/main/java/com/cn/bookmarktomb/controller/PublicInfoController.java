@@ -2,6 +2,8 @@ package com.cn.bookmarktomb.controller;
 
 import cn.hutool.core.map.MapBuilder;
 import com.cn.bookmarktomb.config.AdminConfig;
+import com.cn.bookmarktomb.excepotion.AdminSetBeforeException;
+import com.cn.bookmarktomb.excepotion.SystemInitBeforeException;
 import com.cn.bookmarktomb.model.bean.ProjectProperties;
 import com.cn.bookmarktomb.model.cache.ConfigCache;
 import com.cn.bookmarktomb.model.convert.SystemInfoConvert;
@@ -53,7 +55,7 @@ public class PublicInfoController {
 	public ResponseEntity<Object> initSystem(@Valid @RequestBody InitVO initVO) {
 		boolean initFlag = (boolean)ConfigCache.get(ConfigCache.INIT_FLAG);
 		if (initFlag) {
-			return ResponseEntity.ok("The system has been initialized before!");
+			throw new SystemInitBeforeException();
 		}
 		Map<String, Object> initMap = MapBuilder.<String, Object>create()
 				.put(ConfigCache.SERVER_PORT, initVO.getServerPort())
@@ -71,7 +73,7 @@ public class PublicInfoController {
 	@ApiOperation("Init admin account")
 	public ResponseEntity<Object> createAdmin(@Valid @RequestBody AdminCreateUserVO createUserVO) {
 		if ((boolean) ConfigCache.get(ConfigCache.ADMIN_FLAG)) {
-			return ResponseEntity.ok("The admin has been set before!");
+			throw new AdminSetBeforeException();
 		}
 		RegisterDTO registerDTO = userInfoConverter.adminCreateVO2DTO(createUserVO);
 		registerDTO.setIsAdmin(true);

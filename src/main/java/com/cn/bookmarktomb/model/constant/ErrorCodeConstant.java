@@ -93,6 +93,12 @@ public class ErrorCodeConstant {
     public static final int EMAIL_NOT_AUTH_CODE = 5007;
     public static final String EMAIL_NOT_AUTH_MSG = "Email server auth error";
 
+    public static final int SYSTEM_INIT_BEFORE_CODE = 5008;
+    public static final String SYSTEM_INIT_BEFORE_MSG = "System has been initialized before";
+
+    public static final int ADMIN_SET_BEFORE_CODE = 5009;
+    public static final String ADMIN_SET_BEFORE_MSG = "Admin has been set before";
+
     public static final int DB_OPERATION_CODE = 5100;
     public static final String DB_OPERATION_ERROR = "Database operation error";
 

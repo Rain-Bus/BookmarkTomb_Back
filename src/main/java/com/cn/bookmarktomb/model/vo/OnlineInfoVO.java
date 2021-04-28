@@ -16,6 +16,8 @@ public class OnlineInfoVO {
 	@NoArgsConstructor
 	public static class GetOnlineInfoVO {
 
+		private String token;
+
 		private String username;
 
 		private Long id;

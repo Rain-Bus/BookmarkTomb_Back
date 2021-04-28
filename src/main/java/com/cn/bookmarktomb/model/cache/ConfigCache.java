@@ -1,6 +1,7 @@
 package com.cn.bookmarktomb.model.cache;
 
 import cn.hutool.core.map.MapBuilder;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONObject;
 import cn.hutool.system.SystemUtil;
@@ -13,6 +14,7 @@ import org.springframework.boot.system.ApplicationHome;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author fallen-angle
@@ -64,6 +66,11 @@ public class ConfigCache {
 			return;
 		}
 
+		Database dbInfo = jsonObject.get(DATABASE, Database.class);
+		if (StrUtil.isBlank(dbInfo.getDbname()) || StrUtil.isBlank(dbInfo.getHost()) || Objects.isNull(dbInfo.getPort())) {
+			return;
+		}
+
 		configMap.put(INIT_FLAG, true);
 		configMap.put(SERVER_PORT, jsonObject.get(SERVER_PORT));
 		configMap.put(MD_5, MD5.create().digestHex(jsonObject.toString(), Charset.defaultCharset()));
@@ -71,8 +78,8 @@ public class ConfigCache {
 		configMap.put(EMAIL, jsonObject.get(EMAIL, Email.class));
 		configMap.put(EMAIL_ENABLE, jsonObject.get(EMAIL_ENABLE));
 		configMap.put(REGISTER_ENABLE, (Boolean) jsonObject.get(EMAIL_ENABLE) && (Boolean) jsonObject.get(REGISTER_ENABLE));
-		ApplicationHome h = new ApplicationHome(ConfigCache.class);
-		File jarFile = h.getSource();
+		ApplicationHome home = new ApplicationHome(ConfigCache.class);
+		File jarFile = home.getSource();
 		configMap.put(JAR_PATH, jarFile.getParentFile().toString());
 	}
 

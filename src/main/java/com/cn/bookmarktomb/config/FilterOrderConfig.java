@@ -2,7 +2,6 @@ package com.cn.bookmarktomb.config;
 
 import com.cn.bookmarktomb.filter.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

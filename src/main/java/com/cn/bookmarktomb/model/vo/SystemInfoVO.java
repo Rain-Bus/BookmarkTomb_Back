@@ -4,8 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author fallen-angle
@@ -51,6 +55,7 @@ public class SystemInfoVO {
 
 		private String host;
 
+		@Range(max = 65535)
 		private Integer port;
 
 		private String username;
@@ -64,10 +69,14 @@ public class SystemInfoVO {
 	@NoArgsConstructor
 	public static class DatabaseVO {
 
+		@NotNull
 		String host;
 
+		@NotNull
+		@Range(max = 65535)
 		Integer port;
 
+		@NotNull
 		String dbname;
 
 		String username;
@@ -81,6 +90,7 @@ public class SystemInfoVO {
 	@ToString
 	@NoArgsConstructor
 	public static class InitVO {
+
 		@Valid
 		EmailVO email;
 

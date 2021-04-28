@@ -1,12 +1,9 @@
 package com.cn.bookmarktomb.excepotion;
 
-import com.cn.bookmarktomb.model.entity.Email;
 import com.cn.bookmarktomb.util.ThrowableUtil;
 import com.cn.bookmarktomb.model.constant.ErrorCodeConstant;
 import com.cn.bookmarktomb.model.factory.ApiErrorFactory;
 import com.cn.bookmarktomb.model.vo.ApiErrorVO;
-import com.cn.bookmarktomb.util.ThrowableUtil;
-import com.sun.mail.util.MailConnectException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -125,9 +122,21 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	public ResponseEntity<ApiErrorVO> dbOperationError(HttpRequestMethodNotSupportedException e){
+	public ResponseEntity<ApiErrorVO> httpMethodError(HttpRequestMethodNotSupportedException e){
 		log.error(ThrowableUtil.getStackTrace(e));
 		return ApiErrorFactory.requestError(HttpStatus.METHOD_NOT_ALLOWED, HttpStatus.METHOD_NOT_ALLOWED.value(), e.getMessage());
+	}
+
+	@ExceptionHandler(AdminSetBeforeException.class)
+	public ResponseEntity<ApiErrorVO> adminInitBeforeError(AdminSetBeforeException e) {
+		log.error(ThrowableUtil.getStackTrace(e));
+		return ApiErrorFactory.serverError(ErrorCodeConstant.ADMIN_SET_BEFORE_CODE, e.getMessage());
+	}
+
+	@ExceptionHandler(SystemInitBeforeException.class)
+	public ResponseEntity<ApiErrorVO> systemInitBeforeError(SystemInitBeforeException e) {
+		log.error(ThrowableUtil.getStackTrace(e));
+		return ApiErrorFactory.serverError(ErrorCodeConstant.SYSTEM_INIT_BEFORE_CODE, e.getMessage());
 	}
 
 	private String getErrorCodeAndMsg(int code, String msg) {
