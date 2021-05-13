@@ -10,14 +10,18 @@ import com.cn.bookmarktomb.model.entity.Note;
 import com.cn.bookmarktomb.model.entity.UserInfo;
 import com.cn.bookmarktomb.util.JsonUtil;
 import com.cn.bookmarktomb.util.MongoUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,19 +32,18 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
+@EnableAsync
 @EnableScheduling
+@RequiredArgsConstructor
 public class ScheduleConfig {
 
 	private final MongoTemplate mongoTemplate;
 
 	private List<Long> existUserIds;
 
-	public ScheduleConfig(MongoTemplate mongoTemplate) {
-		this.mongoTemplate = mongoTemplate;
-	}
-
     /*---------------------------------------------------< Delete Schedule >------------------------------------------*/
 
+	@Async
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void deleteExpired() {
 		LocalDateTime now = LocalDateTime.now();
@@ -92,13 +95,18 @@ public class ScheduleConfig {
 	/**
 	 * Refresh config from conf file, detect user's directly change of conf;
 	 */
-	@Scheduled(cron = "*/5 * * * * ?")
+	@Async
+	@Scheduled(cron = "*/10 * * * * ?")
 	public void refreshConfigCache() {
-		if ((boolean) ConfigCache.get(ConfigCache.INIT_FLAG)) {
+		long cacheLastModify = (long) ConfigCache.get(ConfigCache.CONF_MODIFY);
+		long curLastModify = new File((String) ConfigCache.get(ConfigCache.CONF_PATH)).lastModified();
+		if ((boolean) ConfigCache.get(ConfigCache.INIT_FLAG) && cacheLastModify < curLastModify) {
 			try {
 				JSONObject jsonObject = JsonUtil.readJsonFile(ConfigCache.get(ConfigCache.CONF_PATH).toString());
 				if (!MD5.create().digestHex(jsonObject.toString()).equals(ConfigCache.get(ConfigCache.MD_5))) {
 					ConfigCache.initCache();
+				} else {
+					ConfigCache.set(ConfigCache.CONF_MODIFY, curLastModify);
 				}
 			} catch (SystemException e) {
 				ConfigCache.set(ConfigCache.INIT_FLAG, false);

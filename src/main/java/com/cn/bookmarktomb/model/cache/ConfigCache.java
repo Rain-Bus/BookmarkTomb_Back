@@ -24,6 +24,7 @@ import java.util.Objects;
 public class ConfigCache {
 
 	public static final String MD_5 = "md5";
+	public static final String CONF_MODIFY = "confMod";
 	public static final String EMAIL = "email";
 	public static final String JAR_PATH = "jar";
 	public static final String CONF_PATH = "conf";
@@ -32,8 +33,8 @@ public class ConfigCache {
 	public static final String DATABASE = "database";
 	public static final String STARTED_OK = "startedOk";
 	public static final String SERVER_PORT = "serverPort";
-	public static final String EMAIL_ENABLE = "emailEnable";
 	public static final String STARTED_FLAG = "startedFlag";
+	public static final String EMAIL_ENABLE = "emailEnable";
 	public static final String DATABASE_AUTH = "databaseAuh";
 	public static final String DATABASE_REACH = "databaseReach";
 	public static final String REGISTER_ENABLE = "registerEnable";
@@ -43,6 +44,7 @@ public class ConfigCache {
 			.put(EMAIL, null)
 			.put(DATABASE, null)
 			.put(JAR_PATH, null)
+			.put(CONF_MODIFY, 0L)
 			.put(INIT_FLAG, false)
 			.put(STARTED_OK, false)
 			.put(ADMIN_FLAG, false)
@@ -73,6 +75,7 @@ public class ConfigCache {
 
 		configMap.put(INIT_FLAG, true);
 		configMap.put(SERVER_PORT, jsonObject.get(SERVER_PORT));
+		configMap.put(CONF_MODIFY, new File((String) configMap.get(CONF_PATH)).lastModified());
 		configMap.put(MD_5, MD5.create().digestHex(jsonObject.toString(), Charset.defaultCharset()));
 		configMap.put(DATABASE, jsonObject.get(DATABASE, Database.class));
 		configMap.put(EMAIL, jsonObject.get(EMAIL, Email.class));
