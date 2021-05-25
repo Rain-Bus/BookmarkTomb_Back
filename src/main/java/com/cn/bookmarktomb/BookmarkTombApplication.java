@@ -1,7 +1,6 @@
 package com.cn.bookmarktomb;
 
 import com.cn.bookmarktomb.model.cache.ConfigCache;
-import com.cn.bookmarktomb.model.cache.ConfigCache;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;

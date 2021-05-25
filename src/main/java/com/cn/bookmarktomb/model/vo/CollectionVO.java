@@ -35,7 +35,7 @@ public class CollectionVO {
 		private Long serverParentId;
 
 		@NotNull
-		@Pattern(regexp = RegularConstant.COLLECTION_NAME_REGEXP, message = "Collection name can be composed by _ , @ and chinese or english characters!")
+//		@Pattern(regexp = RegularConstant.COLLECTION_NAME_REGEXP, message = "Collection name can be composed by _ , @ and chinese or english characters!")
 		private String title;
 
 		@Past
@@ -71,7 +71,7 @@ public class CollectionVO {
 		private Long id;
 
 		@NotNull(message = "This filed can't be null!")
-		@Pattern(regexp = RegularConstant.COLLECTION_NAME_REGEXP, message = "Collection name can be composed by _ , @ and chinese or english characters!")
+//		@Pattern(regexp = RegularConstant.COLLECTION_NAME_REGEXP, message = "Collection name can be composed by _ , @ and chinese or english characters!")
 		private String title;
 
 		@Future(message = "This must be a future time!")
@@ -107,25 +107,6 @@ public class CollectionVO {
 		private ArrayList<String> tags;
 
 		private Integer item;
-
-	}
-
-	@Getter
-	@Setter
-	@ToString
-	@ApiModel
-	@Deprecated
-	@NoArgsConstructor
-	public static class ChangeVisitStatusVO {
-
-		@NotNull(message = "This filed can't be null!")
-		private Long id;
-
-		@ApiModelProperty(hidden = true)
-        @Null(message = "This filed must be null!")
-		private Long ownerId;
-
-		private List<Long> ownerTeamIds;
 
 	}
 
